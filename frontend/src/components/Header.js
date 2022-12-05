@@ -8,9 +8,9 @@ export default function Header() {
             <header>
                 <nav>
                     <ul>
-                        <li><a href="google.com">Google</a></li>
-                        <li><a href="facebook.com">Facebook</a></li>
-                        <li><a href="twitter.com">Twitter</a></li>
+                        <li><a href="/create">Create</a></li>
+                        <li><a href="/join">Join</a></li>
+                        <li><a href="/">Twitter</a></li>
                         <li><a href="tiktok.com">TikTok</a></li>
                     </ul>
                 </nav>

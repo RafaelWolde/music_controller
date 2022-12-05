@@ -31,6 +31,7 @@ export default function CreateRoomPage(props) {
                             value={true}
                             control={<Radio color="primary" />}
                             label="Pause/Play"
+                            labelPlacement="bottom"
                         />
                         <FormControlLabel
                             value={false}
