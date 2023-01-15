@@ -9,9 +9,55 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import TextField from "@material-ui/core/TextField";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 export default function CreateRoomPage(props) {
-    const [state, setState] = React.useState(4)
+    let navigate = useNavigate()
     let defaultVotes = 2;
+    const [state, setState] = React.useState({
+        guestCanPause: true,
+        votesToSkip: defaultVotes
+    })
+
+    function handleVotesChange(e) {
+        setState({
+            ...state,
+            votesToSkip: e.target.value,
+        })
+    }
+
+    function handleGuestCanPauseChange(e) {
+        setState({
+            ...state,
+            guestCanPause: e.target.value === "true" ? true : false,
+        })
+    }
+    function handleRoomButtonPressed(e) {
+        console.log(
+            {
+                votes_to_skip: state.votesToSkip,
+                guest_can_pause: state.guestCanPause,
+            }
+        )
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                votes_to_skip: state.votesToSkip,
+                guest_can_pause: state.guestCanPause,
+            }),
+        };
+        fetch('/api/create-room/', requestOptions)
+            .then((response) => response.json())
+            .then((data) => {
+                navigate("/room/" + data.code)
+            }
+            )
+    }
+
+    function backButtonPressed() {
+        navigate('/');
+    }
 
     return (
         <Grid container spacing={1}>
@@ -23,19 +69,19 @@ export default function CreateRoomPage(props) {
             <Grid item xs={12} align="center">
                 <FormControl component="fieldset">
                     <FormHelperText >
-                        <div align='center'>
+                        <label align='center'>
                             Guest Control Playback State
-                        </div>
+                        </label>
                     </FormHelperText>
-                    <RadioGroup row defaultValue='true'>
+                    <RadioGroup row defaultValue='true' onChange={handleGuestCanPauseChange}>
                         <FormControlLabel
-                            value={true}
+                            value={'true'}
                             control={<Radio color="primary" />}
                             label="Pause/Play"
                             labelPlacement="bottom"
                         />
                         <FormControlLabel
-                            value={false}
+                            value={'false'}
                             control={<Radio color="secondary" />}
                             label="No Control"
                             labelPlacement="bottom"
@@ -43,27 +89,29 @@ export default function CreateRoomPage(props) {
 
                     </RadioGroup>
                     <FormControl>
-                        <TextField required={true}
-                            type={defaultVotes}
+                        <TextField
+                            onChange={handleVotesChange}
+                            required={true}
+                            type={defaultVotes.toString()}
                             inputProps={
                                 {
-                                    min: 1,
+                                    min: '1',
                                     style: { textAlign: 'center' }
-
                                 }
                             }>
                         </TextField>
                         <FormHelperText>
-                            <div align="center">Votes Required To Skip Song</div>
+                            <label align="center">Votes Required To Skip Song</label>
                         </FormHelperText>
                     </FormControl>
                 </FormControl>
             </Grid>
             <Grid item xs={12} align="center">
-                <Button color="primary" variant="contained"> Create Room</Button>
+                <Button
+                    onClick={handleRoomButtonPressed} color="primary" variant="contained"> Create Room</Button>
             </Grid>
             <Grid item xs={12} align="center">
-                <Button color="secondary" variant="contained" to='/'> Back</Button>
+                <Button color="secondary" variant="contained" to='/' onClick={backButtonPressed}> Back</Button>
             </Grid>
 
         </Grid>

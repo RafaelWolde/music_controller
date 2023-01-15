@@ -9,9 +9,9 @@ export default function App(props) {
 
     const [user, setUser] = React.useState({ user: "Rafael" })
     return (
-        <div>
+        <React.Fragment>
             <HomePage />
-        </div>
+        </React.Fragment>
     );
 };
 
