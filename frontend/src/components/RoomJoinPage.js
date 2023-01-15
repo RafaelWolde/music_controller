@@ -67,10 +67,10 @@ export default function RoomJoinPage(props) {
                 </Grid>
                 <Grid item xs={12} align="center">
                     <Button variant="contained" color="primary" to="/" onClick={backButtonPressed} component={Link}>
-                        Back
+                        <span>Back</span>
                     </Button>
                 </Grid>
             </Grid>
-        </React.Fragment>
+        </React.Fragment >
     )
 }

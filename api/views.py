@@ -95,7 +95,6 @@ class JoinRoom(APIView):
 
 class LeaveRoom(APIView):
     def post(self, request, format=None):
-        print("This api is called with a post")
         if 'room_code' in self.request.session:
             self.request.session.pop('room_code')
             host_id = self.request.session.session_key
@@ -135,11 +134,8 @@ class UpdateRoom(APIView):
 
 def main(request):
     if request.POST:
-        print("This is a post request")
         user_name = request.POST['user_name']
         return HttpResponse(f"{user_name}")
-    else:
-        print("This is a get request")
     return HttpResponse("""
     
     <form method="POST" action="/api/room/" >

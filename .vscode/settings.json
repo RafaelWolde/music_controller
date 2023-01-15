@@ -1,4 +1,6 @@
 {
-    "python.envFile": "C:/Users/Rafael/Documents/projects/python/django/django_env/Scripts/python.exe",
-    
+  "python.envFile": "C:/Users/Rafael/Documents/projects/python/django/django_env/Scripts/python.exe",
+  "files.associations": {
+    "xstring": "cpp"
+  }
 }

@@ -7,8 +7,10 @@ import Room from "./Room";
 import { Grid, Button, ButtonGroup, Typography } from "@material-ui/core";
 import { Navigate } from "react-router-dom";
 export default function HomePage(props) {
+  let date = new Date()
   const [state, setState] = React.useState({
     roomCode: null,
+    date: date.getUTCDate().toString()
   });
 
   useEffect(() => {
@@ -16,7 +18,8 @@ export default function HomePage(props) {
       .then((response) => response.json())
       .then((data) => {
         setState({
-          roomCode: data.code,
+          ...state,
+          roomCode: data.code
         });
       });
   }, [state.roomCode]);
@@ -52,7 +55,7 @@ export default function HomePage(props) {
           exact
           path="/"
           element={
-            state.roomCode ? (
+            state.roomCode != null ? (
               <Navigate replace to={`/room/${state.roomCode}`}></Navigate>
             ) : (
               <RenderHomePage />
