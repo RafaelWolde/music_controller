@@ -67,12 +67,11 @@ def execute_spotify_api_request(session_id, endpoint, post_=False, put_=False):
               'Authorization': "Bearer " + tokens.access_token}
 
     if post_:
-        post(BASE_URL + endpoint, headers=header)
+        response = post(BASE_URL + endpoint, headers=header)
     if put_:
-        put(BASE_URL + endpoint, headers=header)
+        response = put(BASE_URL + endpoint, headers=header)
 
     response = get(BASE_URL + endpoint, {}, headers=header)
-    print("RESPONSE TYPE:", response.status_code)
 
     try:
         return response.json()

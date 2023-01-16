@@ -6,26 +6,28 @@ import CreateRoomPage from "./CreateRoomPage";
 import MusicPlayer from "./MusicPlayer";
 export default function Room(props) {
     let { roomCode } = useParams();
+
     const [state, setState] = React.useState({
         hostName: roomCode,
         votesToSkip: 2,
         guestCanPause: false,
-        isHost: false,
         showSettings: false,
         spotifyAuthenticated: false,
         song: {}
     });
+    const [songState, setSongState] = React.useState({})
+    const [isHostState, setIsHostState] = React.useState(false)
     const navigate = useNavigate();
 
     useEffect(() => {
         getRoomDetails();
-        const interval = setInterval(getCurrentSong, 5000);
 
+        const interval = setInterval(getCurrentSong, 1000);
         return () => {
             clearInterval(interval);
         }
     },
-        [roomCode]);
+        []);
 
     function getRoomDetails() {
         fetch("/api/get-room?code=" + roomCode.toString())
@@ -37,16 +39,12 @@ export default function Room(props) {
                 return response.json();
             })
             .then((data) => {
-                setState({
-                    ...state,
-                    votesToSkip: data.votes_to_skip,
-                    guestCanPause: data.guest_can_pause.toString(),
-                    isHost: data.is_host,
-                });
-
                 if (data.is_host) {
                     authenticateSpotify()
                 }
+                setIsHostState(data.is_host)
+
+
 
             });
     }
@@ -60,17 +58,13 @@ export default function Room(props) {
                 return response.json();
             }
         }).then(data => {
-            console.log(data)
-            setState({
-                ...state,
-                song: data
-            })
+            setSongState(data)
         })
     }
 
     function authenticateSpotify() {
+        console.log("%cLOG", "{color: #653b98}", state.isHost)
         fetch('/spotify/is-authenticated/').then(response => response.json()).then(data => {
-            console.log(data)
             setState(
                 {
                     ...state,
@@ -155,9 +149,10 @@ export default function Room(props) {
                 </Typography>
             </Grid>
             <Grid item align='center' xs={12}>
-                <MusicPlayer  {...state.song} />
+                <MusicPlayer  {...songState} />
             </Grid>
-            {state.isHost ? renderShowSettingsButton() : null}
+            {isHostState ? renderShowSettingsButton() : null}
+
             <Grid item xs={12} align="center">
                 <Button
                     variant="contained"

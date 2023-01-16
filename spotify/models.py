@@ -12,7 +12,10 @@ class SpotifyToken(models.Model):
 
 
 class Vote(models.Model):
-    user = models.CharField(max_length=50, unique=True)
+    user = models.CharField(max_length=50, unique=False)
     created_at = models.DateTimeField(auto_now_add=True)
     song_id = models.CharField(max_length=50)
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.user)

@@ -7,13 +7,13 @@ export default class MusicPlayer extends Component {
         super(props);
     }
 
-
     pauseSong() {
         const requestOptions = {
             method: 'PUT',
             headers: { "Content-Type": "application/json" }
         }
         fetch("/spotify/pause/", requestOptions);
+        alert("PAUSE")
     }
     playSong() {
         const requestOptions = {
@@ -21,16 +21,38 @@ export default class MusicPlayer extends Component {
             headers: { "Content-Type": "application/json" }
         }
         fetch("/spotify/play/", requestOptions);
+        alert("PLAY")
     }
+
+
 
     skipSong() {
-        const requestOptions = {
-            method: "POST",
-            headers: { 'Content-Type': 'application/json' }
-        }
-        fetch('/spotify/skip');
-    }
+        try {
+            let cookieList = document.cookie.split(';')
 
+            let cookieDict = {}
+            cookieList.forEach(cookie => {
+                let splitCookie = cookie.split('=')
+                cookieDict[`${splitCookie[0]}`] = splitCookie[1]
+            });
+
+            console.log(cookieDict.csrftoken)
+            const requestOptions = {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: {
+                    csrfmiddlewaretoken: cookieDict['csrftoken']
+                }
+            }
+
+            fetch('/spotify/skip/', requestOptions);
+        } catch (error) {
+            console.log("%cMUSIC CONTROLLER ERROR LOG:", 'color: green', error)
+        }
+
+
+
+    }
     render() {
         const songProgress = this.props.time / this.props.duration
 
@@ -52,6 +74,7 @@ export default class MusicPlayer extends Component {
                             <IconButton onClick={this.props.is_playing ? this.pauseSong : this.playSong}>
                                 {this.props.is_playing ? <Pause /> : <PlayArrow />}
                             </IconButton>
+                            {this.props.votes}/{this.props.votes_needed}
                             <IconButton onClick={this.skipSong}>
                                 <SkipNext />
                             </IconButton>
